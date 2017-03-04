@@ -1,9 +1,12 @@
 {
 	"intents": [{
-      "intent": "AMAZON.YesIntent",
+      "intent": "SuggestionIntent",
       "slots": []
     }, {
-      "intent": "AMAZON.NoIntent",
+      "intent": "BrowseIntent",
+      "slots": []
+    }, {
+      "intent": "LocationIntent",
       "slots": []
     }, {
 		"intent": "AMAZON.HelpIntent",
@@ -14,15 +17,8 @@
 	}, {
 		"intent": "AMAZON.CancelIntent",
 		"slots": []
-	},{
+	}, {
 		"intent": "AMAZON.StartOverIntent",
 		"slots": []
-	}, {
-		"intent": "DescriptionIntent",
-		 "slots": [
-        {
-          "name": "Description",
-          "type": "descriptionType"
-        }]
 	}]
 }
