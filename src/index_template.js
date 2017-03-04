@@ -43,28 +43,28 @@ var visited = [nodes.length];
 // These are messages that Alexa says to the user during conversation
 
 // This is the intial welcome message
-var welcomeMessage = "Enter message here";
+var welcomeMessage = "Welcome to Eat the Ban. Want a suggestion or to browse by country?";
 
 // This is the message that is repeated if the response to the initial welcome message is not heard
-var repeatWelcomeMessage = "Enter message here";
+var repeatWelcomeMessage = "Say suggestion for a restaurant or browse to pick a country.";
 
 // this is the message that is repeated if Alexa does not hear/understand the reponse to the welcome message
-var promptToStartMessage = "Enter message here";
+var promptToStartMessage = "Say suggestion, browse, or cancel";
 
 // This is the prompt during the game when Alexa doesnt hear or understand a yes / no reply
-var promptToSayYesNo = "Enter message here";
+var promptToSayYesNo = "";
 
 // This is the response to the user after the final question when Alex decides on what group choice the user should be given
-var decisionMessage = "Enter message here";
+var decisionMessage = "You may want to eat here";
 
 // This is the prompt to ask the user if they would like to hear a short description of thier chosen profession or to play again
-var playAgainMessage = "Enter message here";
+var playAgainMessage = "Say 'More Info' for details about this restaurant.";
 
 // this is the help message during the setup at the beginning of the game
-var helpMessage = "Enter message here";
+var helpMessage = "I can make a restaurant suggestion or you can tell me a country you want to browse.";
 
 // This is the goodbye message when the user has asked to quit the game
-var goodbyeMessage = "Enter message here";
+var goodbyeMessage = "Ok, see you soon!";
 
 var speechNotFoundMessage = "Could not find speech for node";
 
@@ -74,9 +74,11 @@ var descriptionNotFoundMessage = "Could not find description for node";
 
 var loopsDetectedMessage = "A potential loop was detected on the node tree, please fix before continuing";
 
-var utteranceTellMeMore = "Enter utterance here";
+//var utteranceTellMeMore = "Enter utterance here";
 
-var utterancePlayAgain = "Enter utterance here";
+var utteranceMoreInfo = "more info";
+
+var utteranceNewRestaurant = "new restaurant";
 
 // the first node that we will use
 var START_NODE = 1;
