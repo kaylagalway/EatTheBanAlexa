@@ -1,386 +1,283 @@
-/**
- * This sample demonstrates a simple skill built with the Amazon Alexa Skills Kit.
- * The Intent Schema, Custom Slots, and Sample Utterances for this skill, as well as
- * testing instructions are located at http://amzn.to/1LzFrj6
- *
- * For additional samples, visit the Alexa Skills Kit Getting Started guide at
- * http://amzn.to/1LGWsLG
- */
-
+'use strict';
 var Alexa = require('alexa-sdk');
+var APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
-var states = {
-    STARTMODE: '_STARTMODE',                // Prompt the user to start or restart the game.
-    ASKMODE: '_ASKMODE',                    // Alexa is asking user the questions.
-    DESCRIPTIONMODE: '_DESCRIPTIONMODE'     // Alexa is describing the final choice and prompting to start again or quit
+
+var restaurantList = {
+    "Iran": {
+        "Ravagh Persian Grill": {
+            "Locations": [
+                "11 E 30th St, Manhattan", 
+                "1135 1st Ave, Manhattan", 
+                "125 1st Ave, Manhattan"
+            ]
+        },
+        "Taste of Persia": {
+            "Locations": [
+                "12 W 18th St, Manhattan" 
+            ]
+        },
+        "Pars Grill House": {
+            "Locations": [
+                "249 W 26th St, Manhattan"
+            ]
+        },
+        "Colbeh": {
+            "Locations": [
+                "75 N Station Plaza, Great Neck"
+            ]
+        },
+        "Persepolis": {
+            "Locations": [
+                "1407 2nd Ave, Manhattan"
+            ]
+        },
+        "Patoug Persian Cuisine": {
+            "Locations": [
+                "220-06 Horace Harding Expy, Queens"
+            ]
+        },
+        "Shiraz Restaurant": {
+            "Locations": [
+                "770 Middle Neck Rd, Great Neck"
+            ]
+        },
+        "Shiraz Kitchen": {
+            "Locations": [
+                "83 E Main St, Elmsford, NY"
+            ]
+        },
+        "Chatanooga Persian": {
+            "Locations": [
+                "37 Cutter Mill Rd, Great Neck"
+                ]
+        },
+        "Bijan's": {
+            "Locations": [
+                "81 Hoyt St, Brooklyn"
+            ]
+        }
+    },
+    "Iraq": {
+        "Moustache": {
+            "Locations": [
+                "90 Bedford St, Manhattan",
+                "265 E 10th St, Manhattan",
+                "1621 Lexington Ave, Manhattan"
+            ]
+        }
+    },
+    "Yemen": {
+        "Yemen Cafe": {
+            "Locations": [
+                "176 Atlantic Ave, Brooklyn",
+                 "7130 5th Ave, Brooklyn"
+            ]
+        },
+        "Yemen Cuisine": {
+            "Locations": [
+                "145 Court St, Brooklyn"
+            ]
+        },
+        "Hadramout": {
+            "Locations": [
+                "172 Atlantic Ave, Brooklyn"
+            ]
+        },
+        "Maya Cuisine": {
+            "Locations": [
+                "24-42 Steinway Street, Astoria"
+            ]
+        },
+        "Grill 212": {
+            "Locations": [
+                "212 W 80th St, Manhattan"
+            ]
+        }
+    },
+    "Somalia": {
+        "Safari Restaurant": {
+            "Locations": [
+                "219 W 116th St, Manhattan"
+            ]
+        }
+    },
+    "Syria": {
+        "Al Salam Restaurant": {
+            "Locations": [
+                "7206 5th Ave, Brooklyn"
+            ]
+        },
+        "Balady Foods": {
+            "Locations": [
+                "7128 5th Ave, Brooklyn"
+            ]
+        },
+        "Damascus Bakery": {
+            "Locations": [
+                "195 Atlantic Ave, Brooklyn"
+            ]
+        },
+        "Cafe Rakka": {
+            "Locations": [
+                "81 St. Marks Pl, Manhattan"
+            ]
+        },
+        "Aleppo": {
+            "Locations": [
+                "939 Main St, Paterson, NJ"
+            ]
+        },
+        "Mansoura": {
+            "Locations": [
+                "515 Kings Hwy, Brooklyn"
+            ]
+        },
+        "First Oasis": {
+            "Locations": [
+                "9218 4th Ave, Brooklyn"
+            ]
+        },
+        "Mar Mar": {
+            "Locations": [
+                "370 Forest Ave, Staten Island"
+            ]
+        },
+        "Syrian Sweet Refuge": {
+            "Locations": [
+                "Multiple Locations"
+            ]
+        }
+    }
+}
+
+var languageStrings = {
+    "en": {
+        "translation": {
+            "FACTS": [
+                "A year on Mercury is just 88 days long.",
+                "Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.",
+                "Venus rotates counter-clockwise, possibly because of a collision in the past with an asteroid.",
+                "On Mars, the Sun appears about half the size as it does on Earth.",
+                "Earth is the only planet not named after a god.",
+                "Jupiter has the shortest day of all the planets.",
+                "The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.",
+                "The Sun contains 99.86% of the mass in the Solar System.",
+                "The Sun is an almost perfect sphere.",
+                "A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.",
+                "Saturn radiates two and a half times more energy into space than it receives from the sun.",
+                "The temperature inside the Sun can reach 15 million degrees Celsius.",
+                "The Moon is moving approximately 3.8 cm away from our planet every year."
+            ],
+            "SKILL_NAME" : "Space Facts",
+            "GET_FACT_MESSAGE" : "Here's your fact: ",
+            "HELP_MESSAGE" : "You can say tell me a space fact, or, you can say exit... What can I help you with?",
+            "HELP_REPROMPT" : "What can I help you with?",
+            "STOP_MESSAGE" : "Goodbye!"
+        }
+    },
+    "en-US": {
+        "translation": {
+            "FACTS": [
+                "A year on Mercury is just 88 days long.",
+                "Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.",
+                "Venus rotates counter-clockwise, possibly because of a collision in the past with an asteroid.",
+                "On Mars, the Sun appears about half the size as it does on Earth.",
+                "Earth is the only planet not named after a god.",
+                "Jupiter has the shortest day of all the planets.",
+                "The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.",
+                "The Sun contains 99.86% of the mass in the Solar System.",
+                "The Sun is an almost perfect sphere.",
+                "A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.",
+                "Saturn radiates two and a half times more energy into space than it receives from the sun.",
+                "The temperature inside the Sun can reach 15 million degrees Celsius.",
+                "The Moon is moving approximately 3.8 cm away from our planet every year."
+            ],
+            "SKILL_NAME" : "American Space Facts"
+        }
+    },
+    "en-GB": {
+        "translation": {
+            "FACTS": [
+                "A year on Mercury is just 88 days long.",
+                "Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.",
+                "Venus rotates anti-clockwise, possibly because of a collision in the past with an asteroid.",
+                "On Mars, the Sun appears about half the size as it does on Earth.",
+                "Earth is the only planet not named after a god.",
+                "Jupiter has the shortest day of all the planets.",
+                "The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.",
+                "The Sun contains 99.86% of the mass in the Solar System.",
+                "The Sun is an almost perfect sphere.",
+                "A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.",
+                "Saturn radiates two and a half times more energy into space than it receives from the sun.",
+                "The temperature inside the Sun can reach 15 million degrees Celsius.",
+                "The Moon is moving approximately 3.8 cm away from our planet every year."
+            ],
+            "SKILL_NAME" : "British Space Facts"
+        }
+    },
+    "de": {
+        "translation": {
+            "FACTS": [
+                "Ein Jahr dauert auf dem Merkur nur 88 Tage.",
+                "Die Venus ist zwar weiter von der Sonne entfernt, hat aber höhere Temperaturen als Merkur.",
+                "Venus dreht sich entgegen dem Uhrzeigersinn, möglicherweise aufgrund eines früheren Zusammenstoßes mit einem Asteroiden.",
+                "Auf dem Mars erscheint die Sonne nur halb so groß wie auf der Erde.",
+                "Die Erde ist der einzige Planet, der nicht nach einem Gott benannt ist.",
+                "Jupiter hat den kürzesten Tag aller Planeten.",
+                "Die Milchstraßengalaxis wird in etwa 5 Milliarden Jahren mit der Andromeda-Galaxis zusammenstoßen.",
+                "Die Sonne macht rund 99,86 % der Masse im Sonnensystem aus.",
+                "Die Sonne ist eine fast perfekte Kugel.",
+                "Eine Sonnenfinsternis kann alle ein bis zwei Jahre eintreten. Sie ist daher ein seltenes Ereignis.",
+                "Der Saturn strahlt zweieinhalb mal mehr Energie in den Weltraum aus als er von der Sonne erhält.",
+                "Die Temperatur in der Sonne kann 15 Millionen Grad Celsius erreichen.",
+                "Der Mond entfernt sich von unserem Planeten etwa 3,8 cm pro Jahr."
+            ],
+            "SKILL_NAME" : "Weltraumwissen auf Deutsch",
+            "GET_FACT_MESSAGE" : "Hier sind deine Fakten: ",
+            "HELP_MESSAGE" : "Du kannst sagen, „Nenne mir einen Fakt über den Weltraum“, oder du kannst „Beenden“ sagen... Wie kann ich dir helfen?",
+            "HELP_REPROMPT" : "Wie kann ich dir helfen?",
+            "STOP_MESSAGE" : "Auf Wiedersehen!"
+        }
+    }
 };
 
-// Questions
-var nodes = [{ "node": 1, "message": "Enter question here", "yes": 2, "no": 3 },
-             { "node": 2, "message": "Enter question here", "yes": 4, "no": 5 },
-             { "node": 3, "message": "Enter question here", "yes": 6, "no": 7 },
-             { "node": 4, "message": "Enter question here", "yes": 8, "no": 9 },
-             { "node": 5, "message": "Enter question here", "yes": 10, "no": 11 },
-             { "node": 6, "message": "Enter question here", "yes": 12, "no": 13 },
-             { "node": 7, "message": "Enter question here", "yes": 14, "no": 15 },
-
-
-// Answers & descriptions
-             { "node": 8, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 9, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 10, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 11, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 12, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 13, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 14, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-             { "node": 15, "message": "Enter answer here", "yes": 0, "no": 0, "description": "Enter description here." },
-];
-
-
-// this is used for keep track of visted nodes when we test for loops in the tree
-var visited = [nodes.length];
-
-// These are messages that Alexa says to the user during conversation
-
-// This is the intial welcome message
-var welcomeMessage = "Welcome to Eat the Ban. Want a suggestion or to browse by country?";
-
-// This is the message that is repeated if the response to the initial welcome message is not heard
-var repeatWelcomeMessage = "Say suggestion for a restaurant or browse to pick a country.";
-
-// this is the message that is repeated if Alexa does not hear/understand the reponse to the welcome message
-var promptToStartMessage = "Say suggestion, browse, or cancel";
-
-// This is the prompt during the game when Alexa doesnt hear or understand a yes / no reply
-var promptToSayYesNo = "";
-
-// This is the response to the user after the final question when Alex decides on what group choice the user should be given
-var decisionMessage = "You may want to eat here";
-
-// This is the prompt to ask the user if they would like to hear a short description of thier chosen profession or to play again
-var playAgainMessage = "Say 'More Info' for details about this restaurant.";
-
-// this is the help message during the setup at the beginning of the game
-var helpMessage = "I can make a restaurant suggestion or you can tell me a country you want to browse.";
-
-// This is the goodbye message when the user has asked to quit the game
-var goodbyeMessage = "Ok, see you soon!";
-
-var speechNotFoundMessage = "Could not find speech for node";
-
-var nodeNotFoundMessage = "In nodes array could not find node";
-
-var descriptionNotFoundMessage = "Could not find description for node";
-
-var loopsDetectedMessage = "A potential loop was detected on the node tree, please fix before continuing";
-
-//var utteranceTellMeMore = "Enter utterance here";
-
-var utteranceMoreInfo = "more info";
-
-var utteranceNewRestaurant = "new restaurant";
-
-// the first node that we will use
-var START_NODE = 1;
-
-// --------------- Handlers -----------------------
-
-// Called when the session starts.
-exports.handler = function (event, context, callback) {
+exports.handler = function(event, context, callback) {
     var alexa = Alexa.handler(event, context);
-    alexa.registerHandlers(newSessionHandler, startGameHandlers, askQuestionHandlers, descriptionHandlers);
+    alexa.APP_ID = APP_ID;
+    // To enable string internationalization (i18n) features, set a resources object.
+    alexa.resources = languageStrings;
+    alexa.registerHandlers(handlers);
     alexa.execute();
 };
 
-// set state to start up and  welcome the user
-var newSessionHandler = {
-  'LaunchRequest': function () {
-    this.handler.state = states.STARTMODE;
-    this.emit(':ask', welcomeMessage, repeatWelcomeMessage);
-  },'AMAZON.HelpIntent': function () {
-    this.handler.state = states.STARTMODE;
-    this.emit(':ask', helpMessage, helpMessage);
-  },
-  'Unhandled': function () {
-    this.handler.state = states.STARTMODE;
-    this.emit(':ask', promptToStartMessage, promptToStartMessage);
-  }
-};
-
-// --------------- Functions that control the skill's behavior -----------------------
-
-// Called at the start of the game, picks and asks first question for the user
-var startGameHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
-    'AMAZON.YesIntent': function () {
-
-        // ---------------------------------------------------------------
-        // check to see if there are any loops in the node tree - this section can be removed in production code
-        visited = [nodes.length];
-        var loopFound = helper.debugFunction_walkNode(START_NODE);
-        if( loopFound === true)
-        {
-            // comment out this line if you know that there are no loops in your decision tree
-             this.emit(':tell', loopsDetectedMessage);
-        }
-        // ---------------------------------------------------------------
-
-        // set state to asking questions
-        this.handler.state = states.ASKMODE;
-
-        // ask first question, the response will be handled in the askQuestionHandler
-        var message = helper.getSpeechForNode(START_NODE);
-
-        // record the node we are on
-        this.attributes.currentNode = START_NODE;
-
-        // ask the first question
-        this.emit(':ask', message, message);
+var handlers = {
+    'LaunchRequest': function () {
+        this.emit('GetFact');
     },
-    'AMAZON.NoIntent': function () {
-        // Handle No intent.
-        this.emit(':tell', goodbyeMessage);
+    'GetNewFactIntent': function () {
+        this.emit('GetFact');
     },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.StartOverIntent': function () {
-         this.emit(':ask', promptToStartMessage, promptToStartMessage);
+    'GetFact': function () {
+        // Get a random space fact from the space facts list
+        // Use this.t() to get corresponding language data
+        var factArr = this.t('FACTS');
+        var factIndex = Math.floor(Math.random() * factArr.length);
+        var randomFact = factArr[factIndex];
+
+        // Create speech output
+        var speechOutput = this.t("GET_FACT_MESSAGE") + randomFact;
+        this.emit(':tellWithCard', speechOutput, this.t("SKILL_NAME"), randomFact)
     },
     'AMAZON.HelpIntent': function () {
-        this.emit(':ask', helpMessage, helpMessage);
-    },
-    'Unhandled': function () {
-        this.emit(':ask', promptToStartMessage, promptToStartMessage);
-    }
-});
-
-
-// user will have been asked a question when this intent is called. We want to look at their yes/no
-// response and then ask another question. If we have asked more than the requested number of questions Alexa will
-// make a choice, inform the user and then ask if they want to play again
-var askQuestionHandlers = Alexa.CreateStateHandler(states.ASKMODE, {
-
-    'AMAZON.YesIntent': function () {
-        // Handle Yes intent.
-        helper.yesOrNo(this,'yes');
-    },
-    'AMAZON.NoIntent': function () {
-        // Handle No intent.
-         helper.yesOrNo(this, 'no');
-    },
-    'AMAZON.HelpIntent': function () {
-        this.emit(':ask', promptToSayYesNo, promptToSayYesNo);
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
+        var speechOutput = this.t("HELP_MESSAGE");
+        var reprompt = this.t("HELP_MESSAGE");
+        this.emit(':ask', speechOutput, reprompt);
     },
     'AMAZON.CancelIntent': function () {
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.StartOverIntent': function () {
-        // reset the game state to start mode
-        this.handler.state = states.STARTMODE;
-        this.emit(':ask', welcomeMessage, repeatWelcomeMessage);
-    },
-    'Unhandled': function () {
-        this.emit(':ask', promptToSayYesNo, promptToSayYesNo);
-    }
-});
-
-// user has heard the final choice and has been asked if they want to hear the description or to play again
-var descriptionHandlers = Alexa.CreateStateHandler(states.DESCRIPTIONMODE, {
-
- 'AMAZON.YesIntent': function () {
-        // Handle Yes intent.
-        // reset the game state to start mode
-        this.handler.state = states.STARTMODE;
-        this.emit(':ask', welcomeMessage, repeatWelcomeMessage);
-    },
-    'AMAZON.NoIntent': function () {
-        // Handle No intent.
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.HelpIntent': function () {
-        this.emit(':ask', promptToSayYesNo, promptToSayYesNo);
+        this.emit(':tell', this.t("STOP_MESSAGE"));
     },
     'AMAZON.StopIntent': function () {
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', goodbyeMessage);
-    },
-    'AMAZON.StartOverIntent': function () {
-        // reset the game state to start mode
-        this.handler.state = states.STARTMODE;
-        this.emit(':ask', welcomeMessage, repeatWelcomeMessage);
-    },
-    'DescriptionIntent': function () {
-        //var reply = this.event.request.intent.slots.Description.value;
-        //console.log('HEARD:' + reply);
-        helper.giveDescription(this);
-    },
-    'Unhandled': function () {
-        this.emit(':ask', promptToSayYesNo, promptToSayYesNo);
-    }
-});
-
-// --------------- Helper Functions  -----------------------
-
-var helper = {
-
-    // gives the user more information on their final choice
-    giveDescription: function (context) {
-
-        // get the speech for the child node
-        var description = helper.getDescriptionForNode(context.attributes.currentNode);
-        var message = description + ', ' + repeatWelcomeMessage;
-
-        context.emit(':ask', message, message);
-    },
-
-    // logic to provide the responses to the yes or no responses to the main questions
-    yesOrNo: function (context, reply) {
-
-        // this is a question node so we need to see if the user picked yes or no
-        var nextNodeId = helper.getNextNode(context.attributes.currentNode, reply);
-
-        // error in node data
-        if (nextNodeId == -1)
-        {
-            context.handler.state = states.STARTMODE;
-
-            // the current node was not found in the nodes array
-            // this is due to the current node in the nodes array having a yes / no node id for a node that does not exist
-            context.emit(':tell', nodeNotFoundMessage, nodeNotFoundMessage);
-        }
-
-        // get the speech for the child node
-        var message = helper.getSpeechForNode(nextNodeId);
-
-        // have we made a decision
-        if (helper.isAnswerNode(nextNodeId) === true) {
-
-            // set the game state to description mode
-            context.handler.state = states.DESCRIPTIONMODE;
-
-            // append the play again prompt to the decision and speak it
-            message = decisionMessage + ' ' + message + ' ,' + playAgainMessage;
-        }
-
-        // set the current node to next node we want to go to
-        context.attributes.currentNode = nextNodeId;
-
-        context.emit(':ask', message, message);
-    },
-
-    // gets the description for the given node id
-    getDescriptionForNode: function (nodeId) {
-
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].node == nodeId) {
-                return nodes[i].description;
-            }
-        }
-        return descriptionNotFoundMessage + nodeId;
-    },
-
-    // returns the speech for the provided node id
-    getSpeechForNode: function (nodeId) {
-
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].node == nodeId) {
-                return nodes[i].message;
-            }
-        }
-        return speechNotFoundMessage + nodeId;
-    },
-
-    // checks to see if this node is an choice node or a decision node
-    isAnswerNode: function (nodeId) {
-
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].node == nodeId) {
-                if (nodes[i].yes === 0 && nodes[i].no === 0) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    },
-
-    // gets the next node to traverse to based on the yes no response
-    getNextNode: function (nodeId, yesNo) {
-        for (var i = 0; i < nodes.length; i++) {
-            if (nodes[i].node == nodeId) {
-                if (yesNo == "yes") {
-                    return nodes[i].yes;
-                }
-                return nodes[i].no;
-            }
-        }
-        // error condition, didnt find a matching node id. Cause will be a yes / no entry in the array but with no corrosponding array entry
-        return -1;
-    },
-
-    // Recursively walks the node tree looking for nodes already visited
-    // This method could be changed if you want to implement another type of checking mechanism
-    // This should be run on debug builds only not production
-    // returns false if node tree path does not contain any previously visited nodes, true if it finds one
-    debugFunction_walkNode: function (nodeId) {
-
-        // console.log("Walking node: " + nodeId);
-
-        if( helper.isAnswerNode(nodeId) === true) {
-            // found an answer node - this path to this node does not contain a previously visted node
-            // so we will return without recursing further
-
-            // console.log("Answer node found");
-             return false;
-        }
-
-        // mark this question node as visited
-        if( helper.debugFunction_AddToVisited(nodeId) === false)
-        {
-            // node was not added to the visited list as it already exists, this indicates a duplicate path in the tree
-            return true;
-        }
-
-        // console.log("Recursing yes path");
-        var yesNode = helper.getNextNode(nodeId, "yes");
-        var duplicatePathHit = helper.debugFunction_walkNode(yesNode);
-
-        if( duplicatePathHit === true){
-            return true;
-        }
-
-        // console.log("Recursing no");
-        var noNode = helper.getNextNode(nodeId, "no");
-        duplicatePathHit = helper.debugFunction_walkNode(noNode);
-
-        if( duplicatePathHit === true){
-            return true;
-        }
-
-        // the paths below this node returned no duplicates
-        return false;
-    },
-
-    // checks to see if this node has previously been visited
-    // if it has it will be set to 1 in the array and we return false (exists)
-    // if it hasnt we set it to 1 and return true (added)
-    debugFunction_AddToVisited: function (nodeId) {
-
-        if (visited[nodeId] === 1) {
-            // node previously added - duplicate exists
-            // console.log("Node was previously visited - duplicate detected");
-            return false;
-        }
-
-        // was not found so add it as a visited node
-        visited[nodeId] = 1;
-        return true;
+        this.emit(':tell', this.t("STOP_MESSAGE"));
     }
 };
