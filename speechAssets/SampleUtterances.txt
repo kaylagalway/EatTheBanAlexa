@@ -1,9 +1,10 @@
-DescriptionIntent {Description} please
-DescriptionIntent please {Description}
-DescriptionIntent {Description}
-DescriptionIntent can you {Description}
-DescriptionIntent tell me about that
-DescriptionIntent description please
+SuggestionIntent Yes
+SuggestionIntent Yes please
+SuggestionIntent No
+SuggestionIntent No I Don’t
+SuggestionIntent Suggestion
+SuggestionIntent Suggestion please
+SuggestionIntent I want a suggestion
 AMAZON.StopIntent stop
 AMAZON.StopIntent off
 AMAZON.StopIntent shut up
