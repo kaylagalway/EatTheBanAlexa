@@ -3,8 +3,8 @@ var Alexa = require('alexa-sdk');
 var APP_ID = undefined;  // TODO replace with your app ID (OPTIONAL).
 
 
-var restaurantList = {
-    "Iran": {
+var countriesArray = [
+    {"Iran": {
         "Ravagh Persian Grill": {
             "Locations": [
                 "11 E 30th St, Manhattan", 
@@ -57,8 +57,8 @@ var restaurantList = {
                 "81 Hoyt St, Brooklyn"
             ]
         }
-    },
-    "Iraq": {
+    }},
+    {"Iraq": {
         "Moustache": {
             "Locations": [
                 "90 Bedford St, Manhattan",
@@ -66,8 +66,8 @@ var restaurantList = {
                 "1621 Lexington Ave, Manhattan"
             ]
         }
-    },
-    "Yemen": {
+    }},
+    {"Yemen": {
         "Yemen Cafe": {
             "Locations": [
                 "176 Atlantic Ave, Brooklyn",
@@ -94,15 +94,15 @@ var restaurantList = {
                 "212 W 80th St, Manhattan"
             ]
         }
-    },
-    "Somalia": {
+    }},
+    {"Somalia": {
         "Safari Restaurant": {
             "Locations": [
                 "219 W 116th St, Manhattan"
             ]
         }
-    },
-    "Syria": {
+    }},
+    {"Syria": {
         "Al Salam Restaurant": {
             "Locations": [
                 "7206 5th Ave, Brooklyn"
@@ -148,136 +148,125 @@ var restaurantList = {
                 "Multiple Locations"
             ]
         }
-    }
-}
+    }}
+];
 
-var languageStrings = {
-    "en": {
-        "translation": {
-            "FACTS": [
-                "A year on Mercury is just 88 days long.",
-                "Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.",
-                "Venus rotates counter-clockwise, possibly because of a collision in the past with an asteroid.",
-                "On Mars, the Sun appears about half the size as it does on Earth.",
-                "Earth is the only planet not named after a god.",
-                "Jupiter has the shortest day of all the planets.",
-                "The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.",
-                "The Sun contains 99.86% of the mass in the Solar System.",
-                "The Sun is an almost perfect sphere.",
-                "A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.",
-                "Saturn radiates two and a half times more energy into space than it receives from the sun.",
-                "The temperature inside the Sun can reach 15 million degrees Celsius.",
-                "The Moon is moving approximately 3.8 cm away from our planet every year."
-            ],
-            "SKILL_NAME" : "Space Facts",
-            "GET_FACT_MESSAGE" : "Here's your fact: ",
-            "HELP_MESSAGE" : "You can say tell me a space fact, or, you can say exit... What can I help you with?",
-            "HELP_REPROMPT" : "What can I help you with?",
-            "STOP_MESSAGE" : "Goodbye!"
-        }
-    },
-    "en-US": {
-        "translation": {
-            "FACTS": [
-                "A year on Mercury is just 88 days long.",
-                "Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.",
-                "Venus rotates counter-clockwise, possibly because of a collision in the past with an asteroid.",
-                "On Mars, the Sun appears about half the size as it does on Earth.",
-                "Earth is the only planet not named after a god.",
-                "Jupiter has the shortest day of all the planets.",
-                "The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.",
-                "The Sun contains 99.86% of the mass in the Solar System.",
-                "The Sun is an almost perfect sphere.",
-                "A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.",
-                "Saturn radiates two and a half times more energy into space than it receives from the sun.",
-                "The temperature inside the Sun can reach 15 million degrees Celsius.",
-                "The Moon is moving approximately 3.8 cm away from our planet every year."
-            ],
-            "SKILL_NAME" : "American Space Facts"
-        }
-    },
-    "en-GB": {
-        "translation": {
-            "FACTS": [
-                "A year on Mercury is just 88 days long.",
-                "Despite being farther from the Sun, Venus experiences higher temperatures than Mercury.",
-                "Venus rotates anti-clockwise, possibly because of a collision in the past with an asteroid.",
-                "On Mars, the Sun appears about half the size as it does on Earth.",
-                "Earth is the only planet not named after a god.",
-                "Jupiter has the shortest day of all the planets.",
-                "The Milky Way galaxy will collide with the Andromeda Galaxy in about 5 billion years.",
-                "The Sun contains 99.86% of the mass in the Solar System.",
-                "The Sun is an almost perfect sphere.",
-                "A total solar eclipse can happen once every 1 to 2 years. This makes them a rare event.",
-                "Saturn radiates two and a half times more energy into space than it receives from the sun.",
-                "The temperature inside the Sun can reach 15 million degrees Celsius.",
-                "The Moon is moving approximately 3.8 cm away from our planet every year."
-            ],
-            "SKILL_NAME" : "British Space Facts"
-        }
-    },
-    "de": {
-        "translation": {
-            "FACTS": [
-                "Ein Jahr dauert auf dem Merkur nur 88 Tage.",
-                "Die Venus ist zwar weiter von der Sonne entfernt, hat aber höhere Temperaturen als Merkur.",
-                "Venus dreht sich entgegen dem Uhrzeigersinn, möglicherweise aufgrund eines früheren Zusammenstoßes mit einem Asteroiden.",
-                "Auf dem Mars erscheint die Sonne nur halb so groß wie auf der Erde.",
-                "Die Erde ist der einzige Planet, der nicht nach einem Gott benannt ist.",
-                "Jupiter hat den kürzesten Tag aller Planeten.",
-                "Die Milchstraßengalaxis wird in etwa 5 Milliarden Jahren mit der Andromeda-Galaxis zusammenstoßen.",
-                "Die Sonne macht rund 99,86 % der Masse im Sonnensystem aus.",
-                "Die Sonne ist eine fast perfekte Kugel.",
-                "Eine Sonnenfinsternis kann alle ein bis zwei Jahre eintreten. Sie ist daher ein seltenes Ereignis.",
-                "Der Saturn strahlt zweieinhalb mal mehr Energie in den Weltraum aus als er von der Sonne erhält.",
-                "Die Temperatur in der Sonne kann 15 Millionen Grad Celsius erreichen.",
-                "Der Mond entfernt sich von unserem Planeten etwa 3,8 cm pro Jahr."
-            ],
-            "SKILL_NAME" : "Weltraumwissen auf Deutsch",
-            "GET_FACT_MESSAGE" : "Hier sind deine Fakten: ",
-            "HELP_MESSAGE" : "Du kannst sagen, „Nenne mir einen Fakt über den Weltraum“, oder du kannst „Beenden“ sagen... Wie kann ich dir helfen?",
-            "HELP_REPROMPT" : "Wie kann ich dir helfen?",
-            "STOP_MESSAGE" : "Auf Wiedersehen!"
-        }
-    }
-};
+// this is used for keep track of visted nodes when we test for loops in the tree
+var chosenRestaurant;
 
-exports.handler = function(event, context, callback) {
+// These are messages that Alexa says to the user during conversation
+
+// This is the intial welcome message
+var welcomeMessage = "Welcome to Eat the Ban. Want a suggestion or to browse by country?";
+
+// This is the message that is repeated if the response to the initial welcome message is not heard
+var repeatWelcomeMessage = "Say suggestion for a restaurant or browse to pick a country.";
+
+// this is the message that is repeated if Alexa does not hear/understand the reponse to the welcome message
+var promptToStartMessage = "Say suggestion, browse, or cancel";
+
+// This is the prompt during the game when Alexa doesnt hear or understand a yes / no reply
+var promptToSayYesNo = "";
+
+// This is the response to the user after the final question when Alex decides on what group choice the user should be given
+var decisionMessage = "You may want to eat here";
+
+// this is the help message during the setup at the beginning of the game
+var helpMessage = "I can make a restaurant suggestion or you can tell me a country you want to browse.";
+
+// This is the goodbye message when the user has asked to quit the game
+var goodbyeMessage = "Ok, see you soon!";
+
+
+// --------------- Handlers -----------------------
+
+// Called when the session starts.
+exports.handler = function (event, context, callback) {
     var alexa = Alexa.handler(event, context);
-    alexa.APP_ID = APP_ID;
-    // To enable string internationalization (i18n) features, set a resources object.
-    alexa.resources = languageStrings;
-    alexa.registerHandlers(handlers);
+    alexa.registerHandlers(newSessionHandler, startGameHandlers, askQuestionHandlers, descriptionHandlers);
     alexa.execute();
 };
 
-var handlers = {
-    'LaunchRequest': function () {
-        this.emit('GetFact');
-    },
-    'GetNewFactIntent': function () {
-        this.emit('GetFact');
-    },
-    'GetFact': function () {
+// set state to start up and  welcome the user
+var newSessionHandler = {
+  'LaunchRequest': function () {
+    this.handler.state = states.STARTMODE;
+    this.emit(':ask', welcomeMessage, repeatWelcomeMessage);
+  },'AMAZON.HelpIntent': function () {
+    this.handler.state = states.STARTMODE;
+    this.emit(':ask', helpMessage, helpMessage);
+  }
+};
+
+// --------------- Functions that control the skill's behavior -----------------------
+
+// Called at the start of the game, picks and asks first question for the user
+var startGameHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
+    'SuggestionIntent': function () {
         // Get a random space fact from the space facts list
         // Use this.t() to get corresponding language data
-        var factArr = this.t('FACTS');
-        var factIndex = Math.floor(Math.random() * factArr.length);
-        var randomFact = factArr[factIndex];
+        //var countryArr = this.t('FACTS');
+        var countryIndex = Math.floor(Math.random() * countriesArray.length);
+        var randomCountryArray = countriesArray[countryIndex];
+        var restaurantIndex = Math.floor(Math.random() * randomCountryArray.length);
+        chosenRestaurant =  randomCountryArray[restaurantIndex]
 
         // Create speech output
-        var speechOutput = this.t("GET_FACT_MESSAGE") + randomFact;
-        this.emit(':tellWithCard', speechOutput, this.t("SKILL_NAME"), randomFact)
-    },
-    'AMAZON.HelpIntent': function () {
-        var speechOutput = this.t("HELP_MESSAGE");
-        var reprompt = this.t("HELP_MESSAGE");
-        this.emit(':ask', speechOutput, reprompt);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t("STOP_MESSAGE"));
+        var speechOutput = "You're restaurant is" + chosenRestaurant
+        this.emit(":tell", speechOutput)
+        // "," + "Do you want more information?"
+        //this.handler.state = states.ASKMODE
+        //this.emit(':ask', speechOutput)
     },
     'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t("STOP_MESSAGE"));
+        this.emit(':tell', goodbyeMessage);
+    },
+    'AMAZON.CancelIntent': function () {
+        this.emit(':tell', goodbyeMessage);
+    },
+    'AMAZON.StartOverIntent': function () {
+         this.emit(':ask', promptToStartMessage, promptToStartMessage);
+    },
+    'AMAZON.HelpIntent': function () {
+        this.emit(':ask', helpMessage, helpMessage);
+    },
+    'Unhandled': function () {
+        this.emit(':ask', promptToStartMessage, promptToStartMessage);
     }
+});
+
+// user will have been asked a question when this intent is called. We want to look at their yes/no
+// response and then ask another question. If we have asked more than the requested number of questions Alexa will
+// make a choice, inform the user and then ask if they want to play again
+
+
+
+// var askQuestionHandlers = Alexa.CreateStateHandler(states.ASKMODE, {
+
+//     'SuggestionIntent': function () {
+//         // Handle Yes intent.
+//         helper.yesOrNo(this,'yes');
+//     },
+//     'LocationIntent' : function () {
+
+//     },
+//     'AMAZON.HelpIntent': function () {
+//         this.emit(':ask', promptToSayYesNo, promptToSayYesNo);
+//     },
+//     'AMAZON.StopIntent': function () {
+//         this.emit(':tell', goodbyeMessage);
+//     },
+//     'AMAZON.CancelIntent': function () {
+//         this.emit(':tell', goodbyeMessage);
+//     },
+//     'AMAZON.StartOverIntent': function () {
+//         // reset the game state to start mode
+//         this.handler.state = states.STARTMODE;
+//         this.emit(':ask', welcomeMessage, repeatWelcomeMessage);
+//     },
+//     'Unhandled': function () {
+//         this.emit(':ask', promptToSayYesNo, promptToSayYesNo);
+//     }
+// });
+
 };
