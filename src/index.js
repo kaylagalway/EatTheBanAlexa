@@ -2,6 +2,11 @@
 var Alexa = require('alexa-sdk');
 var APP_ID = "amzn1.ask.skill.045843cb-12ef-4af0-8371-3a650b6c5131";  // TODO replace with your app ID (OPTIONAL).
 
+var states = {
+    STARTMODE: '_STARTMODE',                // Prompt the user to start or restart the game.
+    ASKMODE: '_ASKMODE',                    // Alexa is asking user the questions.
+    DESCRIPTIONMODE: '_DESCRIPTIONMODE'     // Alexa is describing the final choice and prompting to start again or quit
+};
 
 var countriesArray = [
     {"Iran": [
@@ -194,18 +199,41 @@ exports.handler = function(event, context, callback) {
     alexa.APP_ID = APP_ID;
     // To enable string internationalization (i18n) features, set a resources object.
     alexa.resources = countriesArray;
-    alexa.registerHandlers(handlers);
+    alexa.registerHandlers(newSessionHandlers, startHandlers);
     alexa.execute();
 };
 
-var handlers = {
-    'LaunchRequest': function () {
-        this.emit('GetFact');
+//set the state to Start and welcome user
+var newSessionHandlers = {
+    'LaunchRequest': function() {
+        this.handler.state = states.STARTMODE
+        this.emit(":ask", welcomeMessage, repeatWelcomeMessage)
     },
+    'AMAZON.HelpIntent': function () {
+        this.handler.state = states.STARTMODE;
+        this.emit(':ask', helpMessage, helpMessage);
+    },
+    'Unhandled': function () {
+        this.handler.state = states.STARTMODE;
+        this.emit(':ask', promptToStartMessage, promptToStartMessage);
+    }
+}
+
+// --------------- Functions that control the skill's behavior -----------------------
+
+//Beginning of the restaurant request process
+var startHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
     'SuggestionIntent': function () {
-        this.emit('GetFact');
-    },
-    'GetFact': function () {
+        helper.giveRandomSuggestion(this);
+    }
+});
+
+// --------------- Helper Functions  -----------------------
+
+var helper = {
+    giveRandomSuggestion: function (context) {
+        //need to add check to make sure not the same as previous suggestion
+
         //Get country
         var countryIndex = Math.floor(Math.random() * countriesArray.length);
         var randomCountryDict = countriesArray[countryIndex];
@@ -225,22 +253,11 @@ var handlers = {
         for (var restaurantKey in chosenRestaurantDict) {
             restaurantName = restaurantKey;
         }
+
         var locationsArray = chosenRestaurantDict[restaurantName]["Locations"];
         var locationIndex = Math.floor(Math.random() * locationsArray.length);
         var restaurantLocation = locationsArray[locationIndex];
-
-        var speechOutput = "Your restaurant is " + restaurantName + ". " + "It is located at " + restaurantLocation;
-        this.emit(":tell", speechOutput);
-    },
-    'AMAZON.HelpIntent': function () {
-        var speechOutput = this.t("HELP_MESSAGE");
-        var reprompt = this.t("HELP_MESSAGE");
-        this.emit(':ask', speechOutput, reprompt);
-    },
-    'AMAZON.CancelIntent': function () {
-        this.emit(':tell', this.t("STOP_MESSAGE"));
-    },
-    'AMAZON.StopIntent': function () {
-        this.emit(':tell', this.t("STOP_MESSAGE"));
+        var speechOutput = "Your restaurant is " + restaurantName + ". " + "It is located at " + restaurantLocation + ". Would you like a different suggestion?";
+        context.emit(":ask", speechOutput, speechOutput);
     }
 };

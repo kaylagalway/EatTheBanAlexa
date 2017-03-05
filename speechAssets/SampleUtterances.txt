@@ -5,6 +5,7 @@ SuggestionIntent No I Don’t
 SuggestionIntent Suggestion
 SuggestionIntent Suggestion please
 SuggestionIntent I want a suggestion
+
 AMAZON.StopIntent stop
 AMAZON.StopIntent off
 AMAZON.StopIntent shut up
