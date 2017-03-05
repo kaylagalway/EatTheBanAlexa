@@ -225,7 +225,9 @@ var handlers = {
         for (var restaurantKey in chosenRestaurantDict) {
             restaurantName = restaurantKey;
         }
-        var restaurantLocation = chosenRestaurantDict[restaurantName]["Locations"][0];
+        var locationsArray = chosenRestaurantDict[restaurantName]["Locations"];
+        var locationIndex = Math.floor(Math.random() * locationsArray.length);
+        var restaurantLocation = locationsArray[locationIndex];
 
         var speechOutput = "Your restaurant is " + restaurantName + ". " + "It is located at " + restaurantLocation;
         this.emit(":tell", speechOutput);
