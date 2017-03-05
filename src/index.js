@@ -225,6 +225,12 @@ var newSessionHandlers = {
 var startHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
     'SuggestionIntent': function () {
         helper.giveRandomSuggestion(this);
+    },
+    'AMAZON.YesIntent': function () {
+        helper.giveRandomSuggestion(this);
+    },
+    'AMAZON.NoIntent': function () {
+
     }
 });
 
@@ -258,6 +264,7 @@ var helper = {
         var locationIndex = Math.floor(Math.random() * locationsArray.length);
         var restaurantLocation = locationsArray[locationIndex];
         var speechOutput = "Your restaurant is " + restaurantName + ". " + "It is located at " + restaurantLocation + ". Would you like a different suggestion?";
+        
         context.emit(":ask", speechOutput, speechOutput);
     }
 };

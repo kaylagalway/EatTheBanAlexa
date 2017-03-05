@@ -223,7 +223,7 @@ var newSessionHandlers = {
 
 //Beginning of the restaurant request process
 var startHandlers = Alexa.CreateStateHandler(states.STARTMODE, {
-    'RandomSuggestionIntent': function () {
+    'SuggestionIntent': function () {
         helper.giveRandomSuggestion(this);
     },
     'AMAZON.YesIntent': function () {
