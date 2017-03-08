@@ -6,6 +6,17 @@ SuggestionIntent Suggestion
 SuggestionIntent Suggestion please
 SuggestionIntent I want a suggestion
 
+BrowseIntent Browse
+BrowseIntent Browse by country
+
+IranIntent Iran
+IraqIntent Iraq
+SyriaIntent Syria
+SomaliaIntent Somalia
+YemenIntent Yemen
+
+MoreIntent More
+
 AMAZON.StopIntent stop
 AMAZON.StopIntent off
 AMAZON.StopIntent shut up
