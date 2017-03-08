@@ -3,6 +3,27 @@
       "intent": "SuggestionIntent",
       "slots": []
     }, {
+		"intent": "BrowseIntent",
+		"slots": []
+	}, {
+		"intent": "IranIntent",
+		"slots": []
+	}, {
+		"intent": "IraqIntent",
+		"slots": []
+	}, {
+		"intent": "YemenIntent",
+		"slots": []
+	}, {
+		"intent": "SyriaIntent",
+		"slots": []
+	}, {
+		"intent": "SomaliaIntent",
+		"slots": []
+	}, {
+		"intent": "MoreIntent",
+		"slots": []
+	}, {
 		"intent": "AMAZON.HelpIntent",
 		"slots": []
 	}, {
@@ -16,3 +37,4 @@
 		"slots": []
 	}]
 }
+
