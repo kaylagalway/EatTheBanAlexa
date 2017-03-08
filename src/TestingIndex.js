@@ -8,6 +8,25 @@ var states = {
     DESCRIPTIONMODE: '_DESCRIPTIONMODE'     // Alexa is describing the final choice and prompting to start again or quit
 };
 
+
+var allRestaurants = { 
+	"countries": [{
+		"name": "Iran",
+		"restaurants": [{
+			"name": "Ravagh Persian Grill",
+			"locations": [
+				"11 E 30th St, Manhattan", 
+				"1135 1st Ave, Manhattan", 
+				"125 1st Ave, Manhattan"
+    		]},
+    		{"name": "Taste of Persia",
+    		"locations": [
+    			"12 W 18th St, Manhattan"
+    		]}
+		]}
+	]
+}
+
 var countriesArray = [
     {"Iran": [
         {"Ravagh Persian Grill": {
@@ -241,30 +260,12 @@ var helper = {
         //need to add check to make sure not the same as previous suggestion
 
         //Get country
-        var countryIndex = Math.floor(Math.random() * countriesArray.length);
-        var randomCountryDict = countriesArray[countryIndex];
-
-        //Have Country Dictionary
-        //get array of country restaurants
-        for (var countryKey in randomCountryDict) {
-            restaurantArray = randomCountryDict[countryKey];
-            chosenCountry = countryKey;
-        }
-
-        //Get random restaurant from array
-        var restaurantIndex = Math.floor(Math.random() * restaurantArray.length);
-        var chosenRestaurantDict =  restaurantArray[restaurantIndex];
-
-        //get restaurant name(dictionary key)
-        for (var restaurantKey in chosenRestaurantDict) {
-            restaurantName = restaurantKey;
-        }
-
-        var locationsArray = chosenRestaurantDict[restaurantName]["Locations"];
-        var locationIndex = Math.floor(Math.random() * locationsArray.length);
-        var restaurantLocation = locationsArray[locationIndex];
-        var speechOutput = "Your restaurant is " + restaurantName + ". " + "It is located at " + restaurantLocation + ". Would you like a different suggestion?";
-        
+        var countryIndex = Math.floor(Math.random() * allRestaurants.length);
+        var randomCountryDict = allRestaurants[countryIndex];
+        var restaurants = randomCountryDict["restaurants"];
+        var resturantIndex = Math.floor(Math.random() * restaurants.length);
+        var restaurant = restaurants[restaurantIndex];
+        var speechOutput = "Your restaurant is " + restaurant["name"] + ". " + "It is located at " + restaurant["locations"].first() + ". Would you like a different suggestion?";
         context.emit(":ask", speechOutput, speechOutput);
     }
 };
